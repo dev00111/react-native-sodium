@@ -427,6 +427,24 @@ JNIEXPORT jint JNICALL Java_org_libsodium_jni_SodiumJNI_crypto_1sign_1ed25519_1s
   return (jint)result;
 }
 
+/* *****************************************************************************
+ * Key exchange
+ * *****************************************************************************
+ */
+JNIEXPORT jint JNICALL Java_org_libsodium_jni_SodiumJNI_crypto_1kx_1publickeybytes(JNIEnv *jenv, jclass jcls) {
+  return  (jint)crypto_kx_PUBLICKEYBYTES;
+}
+
+JNIEXPORT jint JNICALL Java_org_libsodium_jni_SodiumJNI_crypto_1kx_1secretkeybytes(JNIEnv *jenv, jclass jcls) {
+  return  (jint)crypto_kx_SECRETKEYBYTES;
+}
+
+JNIEXPORT jint JNICALL Java_org_libsodium_jni_SodiumJNI_crypto_1aead_1xchacha20poly1305_1ietf_1npubbytes(JNIEnv *jenv, jclass jcls) {
+  return  (jint)crypto_aead_xchacha20poly1305_ietf_NPUBBYTES;
+}
+
+
+
 #ifdef __cplusplus
 }
 #endif

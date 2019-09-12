@@ -3,6 +3,7 @@
 
 # Android/IJ
 #
+android/.cxx
 android/build
 android/.externalNativeBuild
 android/lib
