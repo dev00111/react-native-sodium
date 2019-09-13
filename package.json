@@ -1,8 +1,8 @@
 {
   "name": "react-native-sodium",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/lyubo/react-native-sodium.git"
+    "type": "git",
+    "url": "https://github.com/lyubo/react-native-sodium.git"
   },
   "scripts": {
     "postinstall": "tar -xzf precompiled.tgz",
@@ -20,5 +20,27 @@
     "crypto",
     "nacl",
     "sodium"
-  ]
+  ],
+  "react-native": {
+    "crypto": "react-native-crypto",
+    "path": "path-browserify",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify"
+  },
+  "browser": {
+    "crypto": "react-native-crypto",
+    "path": "path-browserify",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify",
+    "vm": "vm-browserify"
+  }
 }

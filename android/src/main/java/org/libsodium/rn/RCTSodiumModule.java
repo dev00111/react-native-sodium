@@ -70,7 +70,10 @@ public class RCTSodiumModule extends ReactContextBaseJavaModule {
      constants.put("crypto_pwhash_ALG_ARGON2ID13", Sodium.crypto_pwhash_algo_argon2id13());
      constants.put("crypto_kx_PUBLICKEYBYTES", Sodium.crypto_kx_publickeybytes());
      constants.put("crypto_kx_SECRETKEYBYTES", Sodium.crypto_kx_secretkeybytes());
+     constants.put("crypto_kx_SESSIONKEYBYTES", Sodium.crypto_kx_sessionkeybytes());
      constants.put("crypto_aead_xchacha20poly1305_ietf_NPUBBYTES", Sodium.crypto_aead_xchacha20poly1305_ietf_npubbytes());
+     constants.put("crypto_aead_xchacha20poly1305_ietf_ABYTES", Sodium.crypto_aead_xchacha20poly1305_ietf_abytes());
+     constants.put("crypto_aead_xchacha20poly1305_ietf_KEYBYTES", Sodium.crypto_aead_xchacha20poly1305_ietf_keybytes());
      return constants;
   }
 
@@ -638,4 +641,173 @@ public class RCTSodiumModule extends ReactContextBaseJavaModule {
       p.reject(ESODIUM, ERR_FAILURE, t);
     }
   }
+
+  @ReactMethod
+  public void crypto_kx_keypair(final Promise p){
+    try {
+      byte[] pk = new byte[Sodium.crypto_kx_publickeybytes()];
+      byte[] sk = new byte[Sodium.crypto_kx_secretkeybytes()];
+
+      if (Sodium.crypto_kx_keypair(pk, sk) != 0)
+        p.reject(ESODIUM,ERR_FAILURE);
+      else {
+        WritableNativeMap result = new WritableNativeMap();
+        result.putString("pk",Base64.encodeToString(pk,Base64.NO_WRAP));
+        result.putString("sk",Base64.encodeToString(sk,Base64.NO_WRAP));
+        p.resolve(result);
+      }
+    }
+    catch (Throwable t) {
+      p.reject(ESODIUM,ERR_FAILURE,t);
+    }
+  }
+
+  @ReactMethod
+  public void crypto_kx_client_session_keys(final String client_pk, final String client_sk, final String server_pk, final Promise p){
+    try {
+      byte[] rx = new byte[Sodium.crypto_kx_sessionkeybytes()];
+      byte[] tx = new byte[Sodium.crypto_kx_sessionkeybytes()];
+
+      byte[] client_pkb = Base64.decode(client_pk, Base64.NO_WRAP);
+      byte[] client_skb = Base64.decode(client_sk, Base64.NO_WRAP);
+      byte[] server_pkb = Base64.decode(server_pk, Base64.NO_WRAP);
+      if(client_pkb.length != Sodium.crypto_kx_publickeybytes()){
+        p.reject(ESODIUM,ERR_BAD_KEY);
+      }
+      else if(client_skb.length != Sodium.crypto_kx_secretkeybytes()){
+        p.reject(ESODIUM,ERR_BAD_KEY);
+      }
+      else if(server_pkb.length != Sodium.crypto_kx_publickeybytes()){
+        p.reject(ESODIUM,ERR_BAD_KEY);
+      }
+      else if (Sodium.crypto_kx_client_session_keys(rx, tx, client_pkb, client_skb, server_pkb) != 0)
+        p.reject(ESODIUM,ERR_FAILURE);
+      else {
+        WritableNativeMap result = new WritableNativeMap();
+        result.putString("rx",Base64.encodeToString(rx,Base64.NO_WRAP));
+        result.putString("tx",Base64.encodeToString(tx,Base64.NO_WRAP));
+        p.resolve(result);
+      }
+    }
+    catch (Throwable t) {
+      p.reject(ESODIUM,ERR_FAILURE,t);
+    }
+  }
+
+  @ReactMethod
+  public void crypto_kx_server_session_keys(final String server_pk, final String server_sk, final String client_pk, final Promise p){
+    try {
+      byte[] rx = new byte[Sodium.crypto_kx_sessionkeybytes()];
+      byte[] tx = new byte[Sodium.crypto_kx_sessionkeybytes()];
+
+      byte[] server_pkb = Base64.decode(server_pk, Base64.NO_WRAP);
+      byte[] server_skb = Base64.decode(server_sk, Base64.NO_WRAP);
+      byte[] client_pkb = Base64.decode(client_pk, Base64.NO_WRAP);
+      if(server_pkb.length != Sodium.crypto_kx_publickeybytes()){
+        p.reject(ESODIUM,ERR_BAD_KEY);
+      }
+      else if(server_skb.length != Sodium.crypto_kx_secretkeybytes()){
+        p.reject(ESODIUM,ERR_BAD_KEY);
+      }
+      else if(client_pkb.length != Sodium.crypto_kx_publickeybytes()){
+        p.reject(ESODIUM,ERR_BAD_KEY);
+      }
+      else if (Sodium.crypto_kx_server_session_keys(rx, tx, server_pkb, server_skb, client_pkb) != 0)
+        p.reject(ESODIUM,ERR_FAILURE);
+      else {
+        WritableNativeMap result = new WritableNativeMap();
+        result.putString("rx",Base64.encodeToString(rx,Base64.NO_WRAP));
+        result.putString("tx",Base64.encodeToString(tx,Base64.NO_WRAP));
+        p.resolve(result);
+      }
+    }
+    catch (Throwable t) {
+      p.reject(ESODIUM,ERR_FAILURE,t);
+    }
+  }
+
+
+  @ReactMethod
+  public void sodium_increment(final String n, final Promise p){
+    try {
+      byte[] nb = Base64.decode(n, Base64.NO_WRAP);
+      if (Sodium.sodium_increment(nb, nb.length) != 0)
+        p.reject(ESODIUM,ERR_FAILURE);
+      else {
+        WritableNativeMap result = new WritableNativeMap();
+        result.putString("n",Base64.encodeToString(nb, Base64.NO_WRAP));
+        p.resolve(result);
+      }
+    }
+    catch (Throwable t) {
+      p.reject(ESODIUM,ERR_FAILURE,t);
+    }
+  }
+
+  @ReactMethod
+  public void crypto_aead_xchacha20poly1305_ietf_encrypt(final String m, final String ad, final String npub, final String k, final Promise p){
+    try {
+      byte[] mb = Base64.decode(m, Base64.NO_WRAP);
+      int mlen = mb.length;
+      byte[] adb = null;
+      if(ad != null) adb = Base64.decode(ad, Base64.NO_WRAP);
+      int adlen = 0;
+      if(adb != null) adlen = adb.length;
+      byte[] npubb = Base64.decode(npub, Base64.NO_WRAP);
+      byte[] kb = Base64.decode(k, Base64.NO_WRAP);
+      byte[] cb = new byte[mlen + Sodium.crypto_aead_xchacha20poly1305_ietf_abytes()];
+      int clen[] = new int[1];
+      clen[0] = cb.length;
+      if(npubb.length != Sodium.crypto_aead_xchacha20poly1305_ietf_npubbytes()){
+        p.reject(ESODIUM,ERR_BAD_NONCE);
+      }
+      else if(kb.length != Sodium.crypto_aead_xchacha20poly1305_ietf_keybytes()){
+        p.reject(ESODIUM,ERR_BAD_KEY);
+      }
+      else if (Sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(cb, clen, mb, mlen, adb, adlen, npubb, kb) != 0)
+        p.reject(ESODIUM,ERR_FAILURE);
+      else {
+        WritableNativeMap result = new WritableNativeMap();
+        result.putString("c",Base64.encodeToString(cb, Base64.NO_WRAP));
+        p.resolve(result);
+      }
+    }
+    catch (Throwable t) {
+      p.reject(ESODIUM,ERR_FAILURE,t);
+    }
+  }
+
+  @ReactMethod
+  public void crypto_aead_xchacha20poly1305_ietf_decrypt(final String c, final String ad, final String npub, final String k, final Promise p){
+    try {
+      byte[] cb = Base64.decode(c, Base64.NO_WRAP);
+      int clen = cb.length;
+      byte[] adb = null;
+      if(ad != null) adb = Base64.decode(ad, Base64.NO_WRAP);
+      int adlen = 0;
+      if(adb != null) adlen = adb.length;
+      byte[] npubb = Base64.decode(npub, Base64.NO_WRAP);
+      byte[] kb = Base64.decode(k, Base64.NO_WRAP);
+      byte[] mb = new byte[clen - Sodium.crypto_aead_xchacha20poly1305_ietf_abytes()];
+      int mlen[] = new int[1];
+      mlen[0] = mb.length;
+      if(npubb.length != Sodium.crypto_aead_xchacha20poly1305_ietf_npubbytes()){
+        p.reject(ESODIUM,ERR_BAD_NONCE);
+      }
+      else if(kb.length != Sodium.crypto_aead_xchacha20poly1305_ietf_keybytes()){
+        p.reject(ESODIUM,ERR_BAD_KEY);
+      }
+      else if (Sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(mb, mlen, cb, clen, adb, adlen, npubb, kb) != 0)
+        p.reject(ESODIUM,ERR_FAILURE);
+      else {
+        WritableNativeMap result = new WritableNativeMap();
+        result.putString("m",Base64.encodeToString(cb, Base64.NO_WRAP));
+        p.resolve(result);
+      }
+    }
+    catch (Throwable t) {
+      p.reject(ESODIUM,ERR_FAILURE,t);
+    }
+  }
+
 }

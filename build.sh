@@ -19,7 +19,7 @@ tar -xzf $srcfile
 cd $srcdir
 
 targetPlatforms="$@"
-[ "$targetPlatforms" ] || targetPlatforms="arm x86 ios"
+[ "$targetPlatforms" ] || targetPlatforms="arm-old arm x86 ios"
 
 for targetPlatform in $targetPlatforms
 do

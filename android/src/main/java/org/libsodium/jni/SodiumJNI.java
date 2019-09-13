@@ -67,5 +67,18 @@ public class SodiumJNI {
 
   public final static native int crypto_kx_publickeybytes();
   public final static native int crypto_kx_secretkeybytes();
+  public final static native int crypto_kx_sessionkeybytes();
+  public final static native int crypto_kx_keypair(byte[] pk, byte[] sk);
+  public final static native int crypto_kx_client_session_keys(byte[] rx, byte[] tx, byte[] client_pk, byte[] client_sk, byte[] server_pk);
+  public final static native int crypto_kx_server_session_keys(byte[] rx, byte[] tx, byte[] server_pk, byte[] server_sk, byte[] client_pk);
+
+
   public final static native int crypto_aead_xchacha20poly1305_ietf_npubbytes();
+  public final static native int crypto_aead_xchacha20poly1305_ietf_abytes();
+  public final static native int crypto_aead_xchacha20poly1305_ietf_keybytes();
+  public final static native int crypto_aead_xchacha20poly1305_ietf_encrypt(byte[] c, int[] clen, byte[] m, int mlen, byte[] ad, int adlen, byte[] npub, byte[] k);
+  public final static native int crypto_aead_xchacha20poly1305_ietf_decrypt(byte[] m, int[] mlen, byte[] c, int clen, byte[] ad, int adlen, byte[] npub, byte[] k);
+
+  public final static native int sodium_increment(byte[] n, int len);
+
 }
