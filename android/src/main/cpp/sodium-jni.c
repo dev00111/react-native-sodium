@@ -541,9 +541,9 @@ JNIEXPORT jint JNICALL Java_org_libsodium_jni_SodiumJNI_crypto_1aead_1xchacha20p
         mlen[0] = (int32_t) lmlen;
     }
 
-    (*jenv)->ReleaseByteArrayElements(jenv, j_m, (jbyte *) c, 0);
+    (*jenv)->ReleaseByteArrayElements(jenv, j_m, (jbyte *) m, 0);
     if(mlen != NULL) (*jenv)->ReleaseIntArrayElements(jenv, j_mlen_p, (jint *) mlen, 0);
-    (*jenv)->ReleaseByteArrayElements(jenv, j_c, (jbyte *) m, 0);
+    (*jenv)->ReleaseByteArrayElements(jenv, j_c, (jbyte *) c, 0);
     (*jenv)->ReleaseByteArrayElements(jenv, j_ad, (jbyte *) ad, 0);
     (*jenv)->ReleaseByteArrayElements(jenv, j_npub, (jbyte *) npub, 0);
     (*jenv)->ReleaseByteArrayElements(jenv, j_k, (jbyte *) k, 0);
