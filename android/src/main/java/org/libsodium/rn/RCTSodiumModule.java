@@ -796,7 +796,7 @@ public class RCTSodiumModule extends ReactContextBaseJavaModule {
       else if (Sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(mb, mlen, cb, clen, adb, adlen, npubb, kb) != 0)
         p.reject(ESODIUM,ERR_FAILURE);
       else {
-        p.resolve(Base64.encodeToString(cb, Base64.NO_WRAP));
+        p.resolve(Base64.encodeToString(mb, Base64.NO_WRAP));
       }
     }
     catch (Throwable t) {
