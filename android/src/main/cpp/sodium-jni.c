@@ -502,7 +502,7 @@ JNIEXPORT jint JNICALL Java_org_libsodium_jni_SodiumJNI_crypto_1aead_1xchacha20p
     unsigned char *c = (unsigned char *) (*jenv)->GetByteArrayElements(jenv, j_c, 0);
     int32_t *clen = (*jenv)->GetIntArrayElements(jenv, j_clen_p, 0);
     unsigned long long lclen = (clen == NULL)? 0: (unsigned long long)clen[0];
-    unsigned long long *pclen = (clen == NULL)? NULL: (unsigned long long *)lclen;
+    unsigned long long *pclen = (clen == NULL)? NULL: (unsigned long long *)&lclen;
     unsigned char *m = (unsigned char *) (*jenv)->GetByteArrayElements(jenv, j_m, 0);
     unsigned char *ad = (unsigned char *) (*jenv)->GetByteArrayElements(jenv, j_ad, 0);
     unsigned char *npub = (unsigned char *) (*jenv)->GetByteArrayElements(jenv, j_npub, 0);
@@ -529,7 +529,7 @@ JNIEXPORT jint JNICALL Java_org_libsodium_jni_SodiumJNI_crypto_1aead_1xchacha20p
     unsigned char *m = (unsigned char *) (*jenv)->GetByteArrayElements(jenv, j_m, 0);
     int32_t *mlen = (*jenv)->GetIntArrayElements(jenv, j_mlen_p, 0);
     unsigned long long lmlen = (mlen == NULL)? 0: mlen[0];
-    unsigned long long *pmlen = (mlen == NULL)? NULL: (unsigned long long *)lmlen;
+    unsigned long long *pmlen = (mlen == NULL)? NULL: (unsigned long long *)&lmlen;
     unsigned char *c = (unsigned char *) (*jenv)->GetByteArrayElements(jenv, j_c, 0);
     unsigned char *ad = (unsigned char *) (*jenv)->GetByteArrayElements(jenv, j_ad, 0);
     unsigned char *npub = (unsigned char *) (*jenv)->GetByteArrayElements(jenv, j_npub, 0);

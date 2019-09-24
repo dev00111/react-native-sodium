@@ -734,9 +734,7 @@ public class RCTSodiumModule extends ReactContextBaseJavaModule {
       if (Sodium.sodium_increment(nb, nb.length) != 0)
         p.reject(ESODIUM,ERR_FAILURE);
       else {
-        WritableNativeMap result = new WritableNativeMap();
-        result.putString("n",Base64.encodeToString(nb, Base64.NO_WRAP));
-        p.resolve(result);
+        p.resolve(Base64.encodeToString(nb, Base64.NO_WRAP));
       }
     }
     catch (Throwable t) {
@@ -767,9 +765,7 @@ public class RCTSodiumModule extends ReactContextBaseJavaModule {
       else if (Sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(cb, clen, mb, mlen, adb, adlen, npubb, kb) != 0)
         p.reject(ESODIUM,ERR_FAILURE);
       else {
-        WritableNativeMap result = new WritableNativeMap();
-        result.putString("c",Base64.encodeToString(cb, Base64.NO_WRAP));
-        p.resolve(result);
+        p.resolve(Base64.encodeToString(cb, Base64.NO_WRAP));
       }
     }
     catch (Throwable t) {
@@ -800,9 +796,7 @@ public class RCTSodiumModule extends ReactContextBaseJavaModule {
       else if (Sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(mb, mlen, cb, clen, adb, adlen, npubb, kb) != 0)
         p.reject(ESODIUM,ERR_FAILURE);
       else {
-        WritableNativeMap result = new WritableNativeMap();
-        result.putString("m",Base64.encodeToString(cb, Base64.NO_WRAP));
-        p.resolve(result);
+        p.resolve(Base64.encodeToString(cb, Base64.NO_WRAP));
       }
     }
     catch (Throwable t) {
